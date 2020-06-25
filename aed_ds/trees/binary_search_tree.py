@@ -23,21 +23,10 @@ class BinarySearchTree(OrderedDictionary, Tree):
     # Returns the value associated with key k.
     # Throws NoSuchElementException
     def get(self, k):
-        node = self.root
-        while True:
-            if node is None:
-                raise NoSuchElementException()
-            if node.get_key() == k:
-                return node.get_element()
-
-            elif node.get_key() > k:
-                node = node.get_left_child()
-
-            else:
-                node = node.get_right_child()
-
+        pass
     # Inserts a new value, associated with key k.
     # Throws DuplicatedKeyException
+
     def insert(self, k, v):
         self.root = self.insert_element(self.root, k, v)
 
