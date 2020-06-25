@@ -23,7 +23,63 @@ class BinarySearchTree(OrderedDictionary, Tree):
     # Returns the value associated with key k.
     # Throws NoSuchElementException
     def get(self, k):
-        pass
+        if not self.get_root():
+            raise NoSuchElementException()
+
+        elif self.get_root().get_key() == k:
+            return self.get_root().get_element()
+
+        else:
+            result = self.recursive_get_node_root(self.get_root(), k)
+            if not result:
+                print(result)
+                raise NoSuchElementException()
+
+            elif k < result.get_key():
+                result = result.get_left_child()
+
+            else:
+                result = result.get_right_child()
+
+            return result.get_element()
+
+    def get_node(self, k):
+        if not self.get_root():
+            raise NoSuchElementException()
+
+        elif self.get_root().get_key() == k:
+            return self.get_root().get_element()
+
+        else:
+            result = self.recursive_get_node_root(self.get_root(), k)
+            if not result:
+                print(result)
+                raise NoSuchElementException()
+
+            elif k < result.get_key():
+                result = result.get_left_child()
+
+            else:
+                result = result.get_right_child()
+
+            return result
+
+    def get_node_root(self, k):
+        if self.get_root().get_element() == k:
+            return None
+        return self.recursive_get_node_root(self.get_root(), k)
+
+    def recursive_get_node_root(self, current_node, k, previus_node=None):
+        if current_node:
+            current_key = current_node.get_key()
+            if current_key == k:
+                return previus_node
+
+            if k < current_key:
+                return self.recursive_get_node_root(current_node.get_left_child(), k, current_node)
+            elif k > current_key:
+                return self.recursive_get_node_root(current_node.get_right_child(), k, current_node)
+
     # Inserts a new value, associated with key k.
     # Throws DuplicatedKeyException
 
@@ -36,7 +92,45 @@ class BinarySearchTree(OrderedDictionary, Tree):
 
     # Removes the key k, and the value associated with it.
     # Throws NoSuchElementException
-    def remove(self, k): pass
+    def remove(self, k):
+        node_to_remove = self.get_node(k)
+        previous_node = self.get_node_root(k)
+
+        if node_to_remove.is_leaf():
+            if not previous_node:
+                self.root = None
+            elif previous_node.get_key() < k:
+                previous_node.set_right_child(None)
+            else:
+                previous_node.set_left_child(None)
+
+        elif not node_to_remove.get_right_child():
+            if not previous_node:
+                self.root = previous_node.get_left_child()
+
+            elif previous_node.get_key() < k:
+                previous_node.set_right_child(None)
+            else:
+                previous_node.set_left_child(node_to_remove.get_left_child())
+
+        else:
+            left_element = self.remove_element(node_to_remove, node_to_remove)
+
+            if previous_node:
+                if previous_node.get_key() < k:
+                    previous_node.set_right_child(left_element)
+                else:
+                    previous_node.set_left_child(left_element)
+
+            left_element.set_left_child(node_to_remove.get_left_child())
+            left_element.set_right_child(node_to_remove.get_right_child())
+
+    def remove_element(self, current_node, previous_node=None):
+        if not current_node.get_left_child():
+            previous_node.set_left_child(current_node.get_right_child())
+            return current_node
+        else:
+            self.remove_element(current_node.get_left_child(), current_node)
 
     # Returns a List with all the keys in the dictionary.
     def keys(self): pass
